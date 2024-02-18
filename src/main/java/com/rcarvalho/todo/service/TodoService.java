@@ -21,7 +21,7 @@ public class TodoService {
     Sort sort = Sort.by("priority").ascending();
     
 
-    public Todo create(Todo todo) {
+    public Todo create(final Todo todo) {
         return this.todoRepository.save(todo);
     }
 
@@ -29,19 +29,25 @@ public class TodoService {
         return this.todoRepository.findAll(sort);
     }
 
-    public Todo findById(UUID id) {
+    public Todo findById(final UUID id) {
         return this.todoRepository.findById(id).orElseThrow(() -> new TodoNotFoundException(id));
     }
 
-    public Todo update(UUID id, Todo todo) {
+    public Todo update(final UUID id, final Todo todo) {
         Optional<Todo> searchedTodo = this.todoRepository.findById(id);
         if (searchedTodo.isEmpty()) {
             throw new TodoNotFoundException(id);
         }
-        return this.todoRepository.save(todo);
+        searchedTodo.ifPresent(t -> {
+            t.setName(todo.getName());
+            t.setDescription(todo.getDescription());
+            t.setDone(todo.getDone());
+            t.setPriority(todo.getPriority());
+        });
+        return this.todoRepository.save(searchedTodo.get());
     }
 
-    public void delete(UUID id) {
+    public void delete(final UUID id) {
         this.todoRepository.deleteById(id);
     }
 }
