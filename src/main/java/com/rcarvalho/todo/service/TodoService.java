@@ -1,5 +1,6 @@
 package com.rcarvalho.todo.service;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class TodoService {
     
 
     public Todo create(final Todo todo) {
+        if (todo == null) throw new InputMismatchException("Todo must be different from null");
         return this.todoRepository.save(todo);
     }
 
@@ -48,6 +50,7 @@ public class TodoService {
     }
 
     public void delete(final UUID id) {
+        this.todoRepository.findById(id).orElseThrow(() -> new TodoNotFoundException(id));
         this.todoRepository.deleteById(id);
     }
 }
