@@ -2,6 +2,8 @@ package com.rcarvalho.todo.entity;
 
 import java.util.UUID;
 
+import com.rcarvalho.todo.entity.dto.TodoDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,4 +36,14 @@ public class Todo {
     private Boolean done;
     private Integer priority;
 
+    public Todo(TodoDTO dto) {
+        this.name = dto.name();
+        this.description = dto.description();
+        this.done = dto.done();
+        this.priority = dto.priority();
+    }
+
+    public static TodoDTO toDTO(Todo todo) {
+        return new TodoDTO(todo.getName(), todo.description, todo.getDone(), todo.getPriority());
+    }
 }
